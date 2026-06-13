@@ -1,26 +1,299 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------ */
+/* Marrow design tokens — "bone & marrow" editorial                    */
+/* Warm bone-paper surfaces, ink text, one marrow-red accent.          */
+/* Themes switch via data-theme on <html> (light | sepia | dark).      */
+/* ------------------------------------------------------------------ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(0.972 0.008 85);
+  --foreground: oklch(0.245 0.015 50);
+  --card: oklch(0.988 0.006 88);
+  --card-foreground: oklch(0.245 0.015 50);
+  --popover: oklch(0.988 0.006 88);
+  --popover-foreground: oklch(0.245 0.015 50);
+  --primary: oklch(0.49 0.17 27);
+  --primary-foreground: oklch(0.975 0.008 85);
+  --secondary: oklch(0.93 0.014 82);
+  --secondary-foreground: oklch(0.3 0.02 50);
+  --muted: oklch(0.93 0.012 84);
+  --muted-foreground: oklch(0.5 0.018 55);
+  --accent: oklch(0.92 0.018 70);
+  --accent-foreground: oklch(0.28 0.02 50);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.975 0.008 85);
+  --border: oklch(0.885 0.014 80);
+  --input: oklch(0.885 0.014 80);
+  --ring: oklch(0.49 0.17 27);
+  --radius: 0.625rem;
+
+  /* reading surface */
+  --reading-font-size: 1.1875rem; /* overridden by settings */
+  --gist-bg: oklch(0.945 0.014 80);
+  --gist-border: oklch(0.87 0.02 75);
+}
+
+[data-theme="sepia"] {
+  --background: oklch(0.93 0.028 88);
+  --foreground: oklch(0.31 0.035 60);
+  --card: oklch(0.955 0.024 88);
+  --card-foreground: oklch(0.31 0.035 60);
+  --popover: oklch(0.955 0.024 88);
+  --popover-foreground: oklch(0.31 0.035 60);
+  --primary: oklch(0.46 0.15 32);
+  --primary-foreground: oklch(0.96 0.02 88);
+  --secondary: oklch(0.885 0.03 86);
+  --secondary-foreground: oklch(0.34 0.035 60);
+  --muted: oklch(0.885 0.028 86);
+  --muted-foreground: oklch(0.49 0.04 62);
+  --accent: oklch(0.87 0.035 80);
+  --accent-foreground: oklch(0.32 0.035 60);
+  --destructive: oklch(0.53 0.19 29);
+  --destructive-foreground: oklch(0.96 0.02 88);
+  --border: oklch(0.84 0.032 84);
+  --input: oklch(0.84 0.032 84);
+  --ring: oklch(0.46 0.15 32);
+  --gist-bg: oklch(0.895 0.03 86);
+  --gist-border: oklch(0.82 0.035 82);
+}
+
+[data-theme="dark"] {
+  --background: oklch(0.185 0.009 55);
+  --foreground: oklch(0.895 0.014 85);
+  --card: oklch(0.225 0.011 55);
+  --card-foreground: oklch(0.895 0.014 85);
+  --popover: oklch(0.225 0.011 55);
+  --popover-foreground: oklch(0.895 0.014 85);
+  --primary: oklch(0.66 0.145 28);
+  --primary-foreground: oklch(0.16 0.01 55);
+  --secondary: oklch(0.27 0.012 55);
+  --secondary-foreground: oklch(0.85 0.014 85);
+  --muted: oklch(0.26 0.011 55);
+  --muted-foreground: oklch(0.66 0.014 80);
+  --accent: oklch(0.285 0.014 55);
+  --accent-foreground: oklch(0.89 0.014 85);
+  --destructive: oklch(0.6 0.19 27);
+  --destructive-foreground: oklch(0.16 0.01 55);
+  --border: oklch(0.3 0.012 55);
+  --input: oklch(0.3 0.012 55);
+  --ring: oklch(0.66 0.145 28);
+  --gist-bg: oklch(0.245 0.012 55);
+  --gist-border: oklch(0.33 0.014 55);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gist: var(--gist-bg);
+  --color-gist-border: var(--gist-border);
+
+  /* literal family names — next/font registers these (+ " Fallback") */
+  --font-serif: "Literata", "Literata Fallback", Georgia, serif;
+  --font-sans: "Schibsted Grotesk", "Schibsted Grotesk Fallback", system-ui,
+    sans-serif;
+
+  --radius-xs: calc(var(--radius) * 0.5);
+  --radius-sm: calc(var(--radius) * 0.75);
+  --radius-md: calc(var(--radius) * 0.875);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.5);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 22%, transparent);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ */
+/* Reading surface — the author's text. Serif, generous leading.       */
+/* ------------------------------------------------------------------ */
+
+.reading-prose {
+  font-family: var(--reading-font-family, var(--font-serif));
+  font-size: var(--reading-font-size);
+  line-height: var(--reading-line-height, 1.72);
+  font-feature-settings: "liga", "onum";
+  text-rendering: optimizeLegibility;
+}
+
+/* reading column width follows the user's measure preference */
+.reading-measure {
+  max-width: var(--reading-measure, 38rem);
+  margin-inline: auto;
+}
+
+.reading-prose p {
+  margin-block: 0.95em;
+}
+
+.reading-prose h1,
+.reading-prose h2,
+.reading-prose h3 {
+  font-weight: 560;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.reading-prose h1 {
+  font-size: 1.9em;
+  margin-block: 1.6em 0.7em;
+}
+.reading-prose h2 {
+  font-size: 1.45em;
+  margin-block: 1.5em 0.6em;
+}
+.reading-prose h3 {
+  font-size: 1.18em;
+  margin-block: 1.3em 0.5em;
+}
+
+.reading-prose blockquote {
+  margin-block: 1.1em;
+  padding-inline-start: 1.1em;
+  border-inline-start: 2px solid
+    color-mix(in oklch, var(--primary) 55%, transparent);
+  font-style: italic;
+  color: color-mix(in oklch, var(--foreground) 82%, var(--background));
+}
+
+.reading-prose li {
+  margin-block: 0.35em;
+  margin-inline-start: 1.4em;
+  list-style: disc;
+}
+
+.reading-prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  margin-block: 1.4em;
+  border-radius: var(--radius-sm);
+}
+
+.reading-prose hr {
+  border: none;
+  margin-block: 2.2em;
+  text-align: center;
+}
+.reading-prose hr::after {
+  content: "⁂";
+  color: var(--muted-foreground);
+  font-size: 0.9em;
+  letter-spacing: 0.4em;
+}
+
+.reading-prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.reading-prose em {
+  font-style: italic;
+}
+.reading-prose strong {
+  font-weight: 640;
+}
+
+/* ------------------------------------------------------------------ */
+/* Density transitions                                                 */
+/* ------------------------------------------------------------------ */
+
+/* Focus level: tier-3 blocks recede — dimmed and slightly smaller.
+   (No content-visibility here: its estimated heights corrupt scrollHeight,
+   breaking jump-to-end, deep scroll restore, and the progress frontier.) */
+.reading-block {
+  transition:
+    opacity 0.35s ease,
+    font-size 0.35s ease;
+}
+.block-dim {
+  opacity: 0.4;
+  font-size: 0.92em;
+}
+
+/* cheap entrance for items appearing on a density change */
+@keyframes density-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.density-in {
+  animation: density-in 0.25s ease both;
+}
+
+/* ------------------------------------------------------------------ */
+/* Chapter opening — drop cap + soft enter                             */
+/* ------------------------------------------------------------------ */
+
+/* Drop cap on the chapter's opening paragraph, at Full density only
+   (collapsed layouts change which block leads). */
+.reading-prose.has-dropcap > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.1em;
+  line-height: 0.82;
+  padding-right: 0.08em;
+  margin-top: 0.06em;
+  font-weight: 560;
+  color: var(--primary);
+  font-feature-settings: "lnum";
+}
+
+@keyframes chapter-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.chapter-enter {
+  animation: chapter-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .density-in,
+  .chapter-enter {
+    animation: none;
+  }
+  .reading-block {
+    transition: none;
+  }
 }

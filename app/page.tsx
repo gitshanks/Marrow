@@ -1,65 +1,113 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useCallback, useState } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { Settings } from "lucide-react";
+
+import { db } from "@/lib/db";
+import { Button } from "@/components/ui/button";
+import { FontSizeBoot, SettingsSheet } from "@/components/settings/settings-sheet";
+import { BookCard } from "@/components/library/book-card";
+import { EmptyState } from "@/components/library/empty-state";
+import {
+  ImportButton,
+  ImportDropOverlay,
+} from "@/components/library/import-dropzone";
+import { useLibraryImport } from "@/components/library/use-library-import";
+
+const GRID =
+  "grid grid-cols-2 gap-x-5 gap-y-10 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
+
+function LibrarySkeleton() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className={GRID} aria-hidden>
+      {Array.from({ length: 5 }, (_, i) => (
+        <div key={i} className="animate-pulse" style={{ opacity: 1 - i * 0.15 }}>
+          <div className="aspect-2/3 rounded-md bg-muted" />
+          <div className="mt-3 h-3.5 w-3/4 rounded-sm bg-muted" />
+          <div className="mt-2 h-3 w-1/2 rounded-sm bg-muted" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      ))}
+    </div>
+  );
+}
+
+export default function LibraryPage() {
+  const books = useLiveQuery(
+    () => db.books.orderBy("addedAt").reverse().toArray(),
+    [],
+  );
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { importFiles, importSampleBook, pendingSample } = useLibraryImport();
+
+  const handleFiles = useCallback(
+    (files: File[]) => void importFiles(files),
+    [importFiles],
+  );
+  const handleSample = useCallback(
+    (path: string, label: string) => void importSampleBook(path, label),
+    [importSampleBook],
+  );
+  const openSettings = useCallback(() => setSettingsOpen(true), []);
+
+  const loading = books === undefined;
+  const empty = books !== undefined && books.length === 0;
+
+  return (
+    <div className="min-h-dvh">
+      <FontSizeBoot />
+      <ImportDropOverlay onFiles={handleFiles} />
+      <SettingsSheet open={settingsOpen} onOpenChange={setSettingsOpen} />
+
+      <div className="mx-auto max-w-6xl px-6 pt-8 pb-24 sm:px-10">
+        <header className="flex items-start justify-between gap-4">
+          {/* In the first-run state the wordmark moves into the centered
+              composition; the header keeps only the gear. */}
+          {empty ? (
+            <span aria-hidden />
+          ) : (
+            <div>
+              <h1 className="font-serif text-3xl italic tracking-tight">
+                Marrow
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Read the marrow. Skip the bone.
+              </p>
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            {books !== undefined && books.length > 0 && (
+              <ImportButton onFiles={handleFiles} variant="outline" size="sm" />
+            )}
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Settings"
+              onClick={openSettings}
+            >
+              <Settings aria-hidden />
+            </Button>
+          </div>
+        </header>
+
+        <main className="mt-10">
+          {loading && <LibrarySkeleton />}
+          {empty && (
+            <EmptyState
+              onFiles={handleFiles}
+              onSample={handleSample}
+              pendingSample={pendingSample}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          )}
+          {books !== undefined && books.length > 0 && (
+            <div className={GRID}>
+              {books.map((book, i) => (
+                <BookCard key={book.id} book={book} index={i} />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

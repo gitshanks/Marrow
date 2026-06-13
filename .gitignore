@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.gstack/
+
+# not for the public repo: copyrighted/imported books (keep public-domain samples in public/samples)
+/*.epub
+# personal / unpublished writing + internal build scaffolding
+stoa-medium-draft.md
+POLISH_BRIEF.md
+CONTRACTS.md
+AGENTS.md
+CLAUDE.md
+.claude/
