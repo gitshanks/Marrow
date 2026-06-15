@@ -52,7 +52,7 @@ It's a standard Next.js app and deploys to Vercel with no configuration. Everyth
 
 ## Notes
 
-Marrow opens DRM-free EPUBs only. Your books never leave your device; the parsed text, your reading position, and your bookmarks all live in the browser's IndexedDB. The bundled sample books (The Prince, Meditations, On the Origin of Species) are public-domain non-fiction, via Project Gutenberg.
+Marrow opens DRM-free EPUBs only. Your books never leave your device; the parsed text, your reading position, and your bookmarks all live in the browser's IndexedDB. The bundled sample books (On the Origin of Species, Relativity, The Wealth of Nations) are public-domain non-fiction, via Project Gutenberg.
 
 ## License
 

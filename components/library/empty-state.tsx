@@ -7,11 +7,12 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImportButton } from "@/components/library/import-dropzone";
 
-// Public-domain non-fiction, since Marrow is for argument-driven books.
+// Unmistakable non-fiction (science and economics), since Marrow is for
+// argument-driven, information-dense books.
 const SAMPLES = [
-  { label: "The Prince", path: "/samples/the-prince.epub" },
-  { label: "Meditations", path: "/samples/meditations.epub" },
   { label: "Origin of Species", path: "/samples/origin-of-species.epub" },
+  { label: "Relativity", path: "/samples/relativity.epub" },
+  { label: "Wealth of Nations", path: "/samples/wealth-of-nations.epub" },
 ] as const;
 
 /** First-run composition: large wordmark, the pitch, import CTA. */
