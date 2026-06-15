@@ -2,7 +2,7 @@
 
 A density slider for non-fiction. Slide it left and the padding folds away until only the argument is left, every word still the author's.
 
-**[Try it →](https://marrow-ecru.vercel.app)**
+**[Try it →](https://marrow.nishh.dev)**
 
 ![Marrow at the Skim setting: low-signal passages collapsed into labelled pills you can tap to reopen](docs/screenshot.png)
 
@@ -52,7 +52,7 @@ It's a standard Next.js app and deploys to Vercel with no configuration. Everyth
 
 ## Notes
 
-Marrow opens DRM-free EPUBs only. Your books never leave your device; the parsed text, your reading position, and your bookmarks all live in the browser's IndexedDB. The bundled sample books (Alice's Adventures in Wonderland, Frankenstein, Walden) are public domain, via Project Gutenberg.
+Marrow opens DRM-free EPUBs only. Your books never leave your device; the parsed text, your reading position, and your bookmarks all live in the browser's IndexedDB. The bundled sample books (The Prince, Meditations, On the Origin of Species) are public-domain non-fiction, via Project Gutenberg.
 
 ## License
 

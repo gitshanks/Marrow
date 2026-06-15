@@ -12,6 +12,9 @@ interface BlockViewProps {
   block: Block;
   dimmed: boolean;
   register: RegisterBlock;
+  /** render this block's opening letter as a drop cap (the chapter's first
+   *  paragraph, whenever it's shown rather than collapsed) */
+  dropCap?: boolean;
 }
 
 /** Undo escapeAttr from parse time — img blocks never pass through the HTML
@@ -106,11 +109,11 @@ function ImgBlock({ bookId, block, dimmed, register }: BlockViewProps) {
 }
 
 export const BlockView = memo(function BlockView(props: BlockViewProps) {
-  const { block, dimmed, register } = props;
+  const { block, dimmed, register, dropCap } = props;
   // no entrance animation on blocks: a fill-mode opacity would override the
   // .block-dim transition, and content-visibility keeps unstarted animations
   // stuck at their from-frame offscreen. Pills animate; blocks just appear.
-  const cls = cn("reading-block", dimmed && "block-dim");
+  const cls = cn("reading-block", dimmed && "block-dim", dropCap && "drop-cap");
   const ref = (el: HTMLElement | null) => register(block.id, el);
 
   switch (block.type) {

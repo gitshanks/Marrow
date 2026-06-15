@@ -7,10 +7,11 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImportButton } from "@/components/library/import-dropzone";
 
+// Public-domain non-fiction, since Marrow is for argument-driven books.
 const SAMPLES = [
-  { label: "Alice in Wonderland", path: "/samples/alice-in-wonderland.epub" },
-  { label: "Frankenstein", path: "/samples/frankenstein.epub" },
-  { label: "Walden", path: "/samples/walden.epub" },
+  { label: "The Prince", path: "/samples/the-prince.epub" },
+  { label: "Meditations", path: "/samples/meditations.epub" },
+  { label: "Origin of Species", path: "/samples/origin-of-species.epub" },
 ] as const;
 
 /** First-run composition: large wordmark, the pitch, import CTA. */
@@ -50,7 +51,7 @@ export function EmptyState({
             Nothing to set up:
           </span>{" "}
           Marrow reads each chapter on this device and learns which passages
-          carry the argument — no account, no key, no cloud.
+          carry the argument. No account, no key, no cloud.
         </p>
       </div>
 

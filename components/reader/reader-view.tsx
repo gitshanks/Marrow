@@ -15,7 +15,6 @@ import { ArrowRight, Library, RotateCcw } from "lucide-react";
 
 import { toast } from "sonner";
 
-import { cn } from "@/lib/utils";
 import { db, getChapter } from "@/lib/db";
 import {
   toggleBookmark,
@@ -591,6 +590,13 @@ function ReaderInner({
     return computeLayout(blocks, appliedAnalysis, appliedDensity, expandedRuns);
   }, [blocks, appliedAnalysis, appliedDensity, expandedRuns]);
 
+  // the chapter's opening paragraph gets a drop cap whenever it's shown as a
+  // block (i.e. not collapsed into a pill), at any density level
+  const dropCapBlockId = useMemo(
+    () => blocks?.find((b) => b.type === "p")?.id,
+    [blocks],
+  );
+
   const rendered = useMemo(() => {
     const out: React.ReactNode[] = [];
     let group: Extract<RenderItem, { kind: "block" }>[] = [];
@@ -608,6 +614,7 @@ function ReaderInner({
               block={g.block}
               dimmed={false}
               register={register}
+              dropCap={g.block.id === dropCapBlockId}
             />
           ))}
         </ExpandedRun>,
@@ -627,6 +634,7 @@ function ReaderInner({
             block={item.block}
             dimmed={item.dimmed}
             register={register}
+            dropCap={item.block.id === dropCapBlockId}
           />,
         );
       } else {
@@ -645,7 +653,7 @@ function ReaderInner({
     }
     flushGroup();
     return out;
-  }, [items, bookId, register, expandRun, collapseRun, refocusRunId]);
+  }, [items, bookId, register, expandRun, collapseRun, refocusRunId, dropCapBlockId]);
 
   const chapterTitle = book.spine[chapterIndex]?.title;
   const nextTitle =
@@ -684,10 +692,7 @@ function ReaderInner({
             <article
               key={chapterIndex}
               aria-label={chapterTitle ?? book.title}
-              className={cn(
-                "reading-prose chapter-enter",
-                appliedDensity === 100 && "has-dropcap",
-              )}
+              className="reading-prose chapter-enter"
               onClickCapture={onArticleClickCapture}
             >
               {rendered}

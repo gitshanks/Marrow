@@ -101,7 +101,7 @@ export function ReaderDock({
         <button
           type="button"
           onClick={() => setMode((m) => ((m + 1) % 3) as 0 | 1 | 2)}
-          aria-label={`${hint} — tap to change`}
+          aria-label={`${hint} (tap to change)`}
           title={`${hint} (tap to change)`}
           className="ml-0.5 flex min-h-11 min-w-15 shrink-0 cursor-pointer items-center justify-end rounded-md border-l border-border py-1 pl-2 text-right text-xs whitespace-nowrap tabular-nums text-muted-foreground transition-colors hover:text-foreground sm:min-h-0"
         >

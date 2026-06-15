@@ -21,10 +21,10 @@ const GROUPS: { title: string; rows: { keys: string[]; label: string }[] }[] = [
   {
     title: "Density",
     rows: [
-      { keys: ["1"], label: "Full — the whole book" },
-      { keys: ["2"], label: "Focus — dim the padding" },
-      { keys: ["3"], label: "Skim — collapse asides" },
-      { keys: ["4"], label: "Marrow — only the argument" },
+      { keys: ["1"], label: "Full: the whole book" },
+      { keys: ["2"], label: "Focus: dim the padding" },
+      { keys: ["3"], label: "Skim: collapse asides" },
+      { keys: ["4"], label: "Marrow: only the argument" },
     ],
   },
   {

@@ -261,9 +261,10 @@
 /* Chapter opening — drop cap + soft enter                             */
 /* ------------------------------------------------------------------ */
 
-/* Drop cap on the chapter's opening paragraph, at Full density only
-   (collapsed layouts change which block leads). */
-.reading-prose.has-dropcap > p:first-of-type::first-letter {
+/* Drop cap on the chapter's opening paragraph. Applied to that specific
+   block (lib drop-cap class) so it shows at every density, as long as the
+   paragraph is shown rather than collapsed into a pill. */
+.reading-prose .drop-cap::first-letter {
   float: left;
   font-size: 3.1em;
   line-height: 0.82;

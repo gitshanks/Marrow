@@ -24,7 +24,7 @@ const schibsted = Schibsted_Grotesk({
 export const metadata: Metadata = {
   title: "Marrow",
   description:
-    "A density-aware EPUB reader. The whole book is always there — slide to read only the marrow.",
+    "A density-aware EPUB reader. The whole book is always there. Slide to read only the marrow.",
 };
 
 export default function RootLayout({
