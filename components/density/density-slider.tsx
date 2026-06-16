@@ -34,6 +34,7 @@ export function DensitySlider({
   const x = useMotionValue(0);
   const fill = useTransform(x, (v) => v + THUMB / 2);
   const dragging = useRef(false);
+  const activePointer = useRef<number | null>(null);
   const reduce = useReducedMotion();
 
   useLayoutEffect(() => {
@@ -86,12 +87,52 @@ export function DensitySlider({
     if (clamped !== activeIndex) onChange(DENSITY_LEVELS[clamped]);
   };
 
-  const onTrackPointerDown = (e: React.PointerEvent) => {
+  // Whole-track pointer dragging: a press or slide anywhere on the track moves
+  // the thumb and commits live. Pointer capture keeps the drag alive even if
+  // the finger drifts off the (short) track, and touch-action:none stops the
+  // browser from claiming the horizontal gesture as a scroll.
+  const clampPos = useCallback(
+    (clientX: number) => {
+      const rect = trackRef.current?.getBoundingClientRect();
+      if (!rect) return 0;
+      return Math.max(0, Math.min(range, clientX - rect.left - THUMB / 2));
+    },
+    [range],
+  );
+
+  const onPointerDown = (e: React.PointerEvent) => {
     if (disabled) return;
-    if ((e.target as HTMLElement).dataset.thumb !== undefined) return;
-    const rect = trackRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    onChange(levelAt(e.clientX - rect.left - THUMB / 2));
+    const track = trackRef.current;
+    if (!track) return;
+    try {
+      track.setPointerCapture(e.pointerId);
+    } catch {
+      /* pointer already released; dragging still works without capture */
+    }
+    activePointer.current = e.pointerId;
+    dragging.current = true;
+    const pos = clampPos(e.clientX);
+    x.set(pos);
+    const lvl = levelAt(pos);
+    if (lvl !== value) onChange(lvl);
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragging.current || e.pointerId !== activePointer.current) return;
+    const pos = clampPos(e.clientX);
+    x.set(pos);
+    const lvl = levelAt(pos);
+    if (lvl !== value) onChange(lvl);
+  };
+
+  const onPointerEnd = (e: React.PointerEvent) => {
+    if (e.pointerId !== activePointer.current) return;
+    dragging.current = false;
+    activePointer.current = null;
+    const lvl = levelAt(x.get());
+    if (lvl !== value) onChange(lvl);
+    if (reduce) x.set(posFor(lvl));
+    else animate(x, posFor(lvl), SPRING);
   };
 
   return (
@@ -112,8 +153,11 @@ export function DensitySlider({
         aria-valuetext={DENSITY_LABELS[value]}
         aria-disabled={disabled}
         onKeyDown={onKeyDown}
-        onPointerDown={onTrackPointerDown}
-        className="relative h-8 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+        className="relative h-8 cursor-pointer touch-none rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
       >
         <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-border" />
         <motion.div
@@ -136,27 +180,9 @@ export function DensitySlider({
           />
         ))}
         <motion.div
-          data-thumb
-          drag={disabled ? false : "x"}
-          dragConstraints={{ left: 0, right: range }}
-          dragElastic={0.05}
-          dragMomentum={false}
-          onDragStart={() => {
-            dragging.current = true;
-          }}
-          onDrag={() => {
-            const lvl = levelAt(x.get());
-            if (lvl !== value) onChange(lvl);
-          }}
-          onDragEnd={() => {
-            dragging.current = false;
-            const lvl = levelAt(x.get());
-            if (lvl !== value) onChange(lvl);
-            if (reduce) x.set(posFor(lvl));
-            else animate(x, posFor(lvl), SPRING);
-          }}
+          aria-hidden
           style={{ x }}
-          className="absolute top-1/2 z-10 -mt-[9px] h-[18px] w-[18px] cursor-grab touch-none rounded-full bg-primary shadow-md ring-2 ring-background active:cursor-grabbing"
+          className="pointer-events-none absolute top-1/2 z-10 -mt-[9px] h-[18px] w-[18px] rounded-full bg-primary shadow-md ring-2 ring-background"
         />
       </div>
       <div className="mt-0.5 flex justify-between">
