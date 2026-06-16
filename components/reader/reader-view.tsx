@@ -426,6 +426,39 @@ function ReaderInner({
     }
   }, []);
 
+  /* ---------- touch: swipe left/right to turn the chapter (mobile) ---------- */
+
+  // Attached to <main> only, so the dock's density slider (a sibling element)
+  // never feeds these handlers. A turn fires only on a decisive, mostly
+  // horizontal flick, so it never competes with vertical scrolling.
+  const touchStartRef = useRef<{ x: number; y: number; t: number } | null>(
+    null,
+  );
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length !== 1) {
+      touchStartRef.current = null;
+      return;
+    }
+    const t = e.touches[0];
+    touchStartRef.current = { x: t.clientX, y: t.clientY, t: Date.now() };
+  }, []);
+  const onTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const start = touchStartRef.current;
+      touchStartRef.current = null;
+      if (!start) return;
+      const t = e.changedTouches[0];
+      if (!t) return;
+      const dx = t.clientX - start.x;
+      const dy = t.clientY - start.y;
+      const horizontal =
+        Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy) * 1.6;
+      if (!horizontal || Date.now() - start.t > 700) return;
+      goToChapter(chapterIndexRef.current + (dx < 0 ? 1 : -1));
+    },
+    [goToChapter],
+  );
+
   /* ---------- bookmarks ---------- */
 
   const bookmarks = useBookmarks(bookId);
@@ -679,7 +712,11 @@ function ReaderInner({
         onOpenToc={() => setTocOpen(true)}
         onOpenSettings={() => setSettingsOpen(true)}
       />
-      <main className="reading-measure px-6 pb-44 pt-24">
+      <main
+        className="reading-measure px-6 pb-44 pt-24"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         {chapter === undefined ? (
           <ChapterSkeleton />
         ) : chapter === null || !blocks?.length ? (

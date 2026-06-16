@@ -56,7 +56,7 @@ export async function exportMarrowMarkdown(
     "",
     `*${book.author}*`,
     "",
-    `> Marrow view exported from Marrow — the author's core passages, verbatim. Asterisk lines stand in for elided text; the quote is the hidden passage's own opening words.`,
+    `> Marrow view exported from Marrow. The author's core passages, verbatim. Asterisk lines stand in for elided text; the quote is the hidden passage's own opening words.`,
     "",
   ];
 
@@ -75,7 +75,7 @@ export async function exportMarrowMarkdown(
         if (md) lines.push(md, "");
       } else {
         const gist = item.gist ? `*${item.gist}*` : "*passage elided*";
-        lines.push(`> ✳︎ ${gist} — ${item.wordCount.toLocaleString()} words elided`, "");
+        lines.push(`> ✳︎ ${gist} · ${item.wordCount.toLocaleString()} words elided`, "");
       }
     }
   }

@@ -45,14 +45,14 @@ export function EmptyState({
           <span className="font-medium text-foreground">
             Bring your own books:
           </span>{" "}
-          import any DRM-free EPUB and it stays on this device.
+          any DRM-free EPUB stays on-device.
         </p>
         <p>
           <span className="font-medium text-foreground">
             Nothing to set up:
           </span>{" "}
-          Marrow reads each chapter on this device and learns which passages
-          carry the argument. No account, no key, no cloud.
+          Marrow reads each chapter here and finds what carries the argument.
+          No account, no key, no cloud.
         </p>
       </div>
 

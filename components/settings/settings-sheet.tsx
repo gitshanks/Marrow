@@ -249,7 +249,7 @@ export function SettingsSheet(props: {
             <SectionHeading>Analysis</SectionHeading>
             <p className="text-xs leading-relaxed text-muted-foreground">
               Marrow reads each chapter on this device to find the passages
-              that carry the argument — no account, no API, no cloud. The
+              that carry the argument. No account, no API, no cloud. The
               whole book is always there; density only changes what&apos;s in
               focus, and collapsed text is quoted, never paraphrased.
             </p>

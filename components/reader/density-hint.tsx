@@ -61,7 +61,7 @@ export function DensityHint({ active }: { active: boolean }) {
                 <span className="font-medium">This is the marrow slider.</span>{" "}
                 <span className="text-muted-foreground">
                   Slide left to dim, then collapse, the passages that don&apos;t
-                  carry the argument — the author&apos;s words are always one tap
+                  carry the argument. The author&apos;s words are always one tap
                   away.
                 </span>
               </p>
