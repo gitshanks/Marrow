@@ -123,6 +123,8 @@ function ReaderInner({
   const [tocOpen, setTocOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [topBarHidden, setTopBarHidden] = useState(false);
+  /** direction of the last chapter turn — drives the slide-in animation */
+  const [navDir, setNavDir] = useState<1 | -1>(1);
   /** run whose pill should regain focus after a keyboard-driven collapse */
   const [refocusRunId, setRefocusRunId] = useState<string | null>(null);
   /** current top-visible block, reactive but only updated when it changes */
@@ -405,6 +407,7 @@ function ReaderInner({
     (next: number) => {
       const clamped = clampChapter(next);
       if (clamped === chapterIndexRef.current) return;
+      setNavDir(clamped > chapterIndexRef.current ? 1 : -1);
       setChapterIndex(clamped);
       setExpandedRuns(new Set());
       visibleIds.current.clear();
@@ -701,7 +704,7 @@ function ReaderInner({
   );
 
   return (
-    <div className="min-h-dvh">
+    <div className="min-h-dvh overflow-x-clip">
       <FontSizeBoot />
       <ReaderTopBar
         hidden={topBarHidden}
@@ -732,7 +735,9 @@ function ReaderInner({
             <article
               key={chapterIndex}
               aria-label={chapterTitle ?? book.title}
-              className="reading-prose chapter-enter"
+              className={`reading-prose ${
+                navDir === 1 ? "chapter-enter-next" : "chapter-enter-prev"
+              }`}
               onClickCapture={onArticleClickCapture}
             >
               {rendered}

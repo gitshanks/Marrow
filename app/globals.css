@@ -275,23 +275,40 @@
   font-feature-settings: "lnum";
 }
 
-@keyframes chapter-enter {
+/* Directional chapter turn: the incoming chapter slides in from the side it
+   was summoned from (next -> from the right, prev -> from the left) and settles
+   with a soft ease-out, so a turn reads as deliberate, not a jump-cut. */
+@keyframes chapter-enter-next {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translate3d(26px, 0, 0);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-.chapter-enter {
-  animation: chapter-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+@keyframes chapter-enter-prev {
+  from {
+    opacity: 0;
+    transform: translate3d(-26px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.chapter-enter-next {
+  animation: chapter-enter-next 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.chapter-enter-prev {
+  animation: chapter-enter-prev 0.52s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .density-in,
-  .chapter-enter {
+  .chapter-enter-next,
+  .chapter-enter-prev {
     animation: none;
   }
   .reading-block {
