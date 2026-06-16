@@ -713,7 +713,10 @@ function ReaderInner({
         onOpenSettings={() => setSettingsOpen(true)}
       />
       <main
-        className="reading-measure px-6 pb-44 pt-24"
+        // touch-pan-y: keep vertical scrolling native, but reserve horizontal
+        // swipes for the app so the browser doesn't claim them as a pan (which
+        // fires touchcancel, not touchend, and the chapter never turns).
+        className="reading-measure touch-pan-y px-6 pb-44 pt-24"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
